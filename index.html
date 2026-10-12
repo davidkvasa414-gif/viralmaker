@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ViralMaker — инструменты для авторов</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #0b1020;
+  color: #f4f6ff;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  text-align: center;
+  padding: 45px 16px;
+  background: linear-gradient(135deg, #172554, #4338ca);
+}
+
+header h1 {
+  font-size: 42px;
+  margin: 0 0 12px;
+}
+
+header h1 span { color: #a5b4fc; }
+
+header p {
+  color: #dbeafe;
+  line-height: 1.6;
+}
+
+main {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 0 16px;
+}
+
+.tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  background: #151d32;
+  border: 1px solid #293653;
+  border-radius: 16px;
+  padding: 22px;
+}
+
+.card h2 { font-size: 19px; }
+
+.card p {
+  color: #aebbd3;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 7px 0;
+  background: #0b1224;
+  color: white;
+  border: 1px solid #394967;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+textarea {
+  min-height: 85px;
+  resize: vertical;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 9px;
+  background: #6366f1;
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+button:hover { background: #4f46e5; }
+
+.result {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: #0b1224;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 12px;
+  color: #dbeafe;
+  font-size: 14px;
+  min-height: 40px;
+}
+
+.copy { background: #263653; }
+
+footer {
+  text-align: center;
+  padding: 28px;
+  color: #8592ad;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Viral<span>Maker</span> 🚀</h1>
+  <p>
+    Бесплатные инструменты для YouTube Shorts и TikTok.<br>
+    Создавай идеи, названия и описания за секунды!
+  </p>
+</header>
+
+<main>
+<div class="tools">
+
+<section class="card">
+  <h2>🎬 Генератор идей</h2>
+  <p>Получи идею для следующего короткого видео.</p>
+  <select id="topic">
+    <option value="gaming">Игры</option>
+    <option value="space">Космос и факты</option>
+    <option value="fun">Юмор</option>
+    <option value="challenge">Челленджи</option>
+  </select>
+  <button onclick="idea()">Создать идею</button>
+  <div class="result" id="ideaResult">Твоя идея появится здесь.</div>
+  <button class="copy" onclick="copyText('ideaResult')">Копировать</button>
+</section>
+
+<section class="card">
+  <h2>🔥 Генератор названий</h2>
+  <p>Введи тему видео и получи варианты заголовков.</p>
+  <input id="titleTopic" placeholder="Например, смешной момент в CS2">
+  <button onclick="titles()">Придумать названия</button>
+  <div class="result" id="titleResult">Названия появятся здесь.</div>
+  <button class="copy" onclick="copyText('titleResult')">Копировать</button>
+</section>
+
+<section class="card">
+  <h2>📝 Генератор описаний</h2>
+  <p>Создай описание для своего видео.</p>
+  <input id="descTopic" placeholder="Тема твоего видео">
+  <button onclick="description()">Создать описание</button>
+  <div class="result" id="descResult">Описание появится здесь.</div>
+  <button class="copy" onclick="copyText('descResult')">Копировать</button>
+</section>
+
+<section class="card">
+  <h2>#️⃣ Генератор хештегов</h2>
+  <p>Подбери хештеги для своего ролика.</p>
+  <input id="tagTopic" placeholder="Например, Roblox">
+  <button onclick="tags()">Создать хештеги</button>
+  <div class="result" id="tagResult">Хештеги появятся здесь.</div>
+  <button class="copy" onclick="copyText('tagResult')">Копировать</button>
+</section>
+
+<section class="card">
+  <h2>📊 Анализатор заголовка</h2>
+  <p>Проверь длину заголовка своего видео.</p>
+  <textarea id="headline" placeholder="Вставь заголовок видео"></textarea>
+  <button onclick="analyze()">Проверить заголовок</button>
+  <div class="result" id="analysisResult">Результат появится здесь.</div>
+</section>
+
+</div>
+</main>
+
+<footer>
+  ViralMaker © 2026 · Бесплатные инструменты для авторов
+</footer>
+
+<script>
+const ideas = {
+  gaming: [
+    "Попробуй пройти уровень с неожиданным ограничением.",
+    "Покажи самый неожиданный момент своей игровой сессии.",
+    "Сравни ожидания новичка и реальность в игре.",
+    "Проверь необычный игровой совет и покажи результат."
+  ],
+  space: [
+    "Сравни размеры Земли и Солнца.",
+    "Расскажи о планете с необычными условиями.",
+    "Покажи, сколько времени свет летит от Солнца до Земли.",
+    "Расскажи удивительный факт о космосе за 15 секунд."
+  ],
+  fun: [
+    "Покажи ситуацию, знакомую каждому ученику.",
+    "Сними сценку о том, как планы идут не по плану.",
+    "Покажи разницу между ожиданием и реальностью.",
+    "Придумай короткую сценку с неожиданной концовкой."
+  ],
+  challenge: [
+    "Попробуй выполнить игровое задание с необычным правилом.",
+    "Устрой испытание: три попытки на одну цель.",
+    "Проверь, получится ли выполнить задачу с первой попытки.",
+    "Сравни обычный способ прохождения с необычным."
+  ]
+};
+
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function idea() {
+  document.getElementById("ideaResult").textContent =
+    pick(ideas[document.getElementById("topic").value]);
+}
+
+function titles() {
+  const t = document.getElementById("titleTopic").value.trim();
+
+  if (!t) {
+    alert("Сначала введи тему видео.");
+    return;
+  }
+
+  document.getElementById("titleResult").textContent = [
+    "Ты не поверишь, что произошло: " + t,
+    "Я проверил это — вот что вышло! | " + t,
+    "Самый неожиданный момент: " + t,
+    "Это пошло совсем не по плану… " + t,
+    "Ты бы попробовал? " + t
+  ].join("\n\n");
+}
+
+function description() {
+  const t = document.getElementById("descTopic").value.trim();
+
+  if (!t) {
+    alert("Сначала введи тему видео.");
+    return;
+  }
+
+  document.getElementById("descResult").textContent =
+    "Смотри это видео про " + t + " до конца!\n\n" +
+    "Если понравилось — поставь лайк и подпишись на канал. " +
+    "Напиши в комментариях, что думаешь!\n\n" +
+    "#Shorts #YouTube";
+}
+
+function tags() {
+  const t = document.getElementById("tagTopic").value.trim();
+
+  if (!t) {
+    alert("Сначала введи тему видео.");
+    return;
+  }
+
+  const clean = t.replace(/[^a-zA-Zа-яА-ЯёЁ0-9]/g, "");
+
+  document.getElementById("tagResult").textContent =
+    "#Shorts #YouTube #" + clean + " #Видео #Контент #TikTok";
+}
+
+function analyze() {
+  const t = document.getElementById("headline").value.trim();
+
+  if (!t) {
+    alert("Вставь заголовок.");
+    return;
+  }
+
+  const advice = t.length < 25
+    ? "Заголовок короткий. Убедись, что тема понятна."
+    : t.length <= 65
+    ? "Хорошая длина для проверки."
+    : "Заголовок длинный. Попробуй сделать его короче.";
+
+  document.getElementById("analysisResult").textContent =
+    "Символов: " + t.length +
+    "\nСлов: " + t.split(/\s+/).length +
+    "\n\n" + advice +
+    "\n\nЭто базовая проверка длины, а не прогноз просмотров.";
+}
+
+function copyText(id) {
+  const text = document.getElementById(id).textContent;
+
+  if (!text) return;
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text)
+      .then(() => alert("Скопировано!"))
+      .catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const area = document.createElement("textarea");
+  area.value = text;
+  document.body.appendChild(area);
+  area.select();
+
+  try {
+    document.execCommand("copy");
+    alert("Скопировано!");
+  } catch (e) {
+    alert("Не удалось скопировать. Выдели текст вручную.");
+  }
+
+  area.remove();
+}
+</script>
+
+</body>
+</html>
